@@ -4,11 +4,7 @@ from skimage import exposure
 from tqdm import tqdm
 import numpy as np
 import matplotlib.pyplot as plt
-
-# Get the training and test data
-train_path = 'CNN/seg_train/seg_train'
-train_data = augment_data(train_path)
-
+from sklearn.decomposition import PCA
 
 # Perform HOG (Histogram of gradients) and PCA
 # Expects data as pytorch datasets
@@ -24,6 +20,7 @@ def select_extract(data):
     hog_features = np.array(hog_features)
     labels = np.array(labels)
 
+    return hog_features, labels
 
 def get_hog_features(image):
     # Need to make the tensor image data into numpy arrays for HOG to work
@@ -41,4 +38,13 @@ def get_hog_features(image):
     
     return features
 
-select_extract(train_data)
+# Use PCA to reduce from the original 2916 features
+def get_pca_features(features_train, features_test, n_components):
+    # Create PCA
+    pca = PCA(n_components=n_components)
+    # Apply PCA (fitting only on training data)
+    features_pca_train = pca.fit_transform(features_train)
+    features_pca_test = pca.transform(features_test)
+
+    return features_pca_train, features_pca_test
+

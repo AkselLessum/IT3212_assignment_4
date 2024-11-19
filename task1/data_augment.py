@@ -1,8 +1,9 @@
 import torch
 from torchvision import datasets, transforms
-from torch.utils.data import DataLoader, ConcatDataset
+from torch.utils.data import DataLoader, ConcatDataset, Subset
 import matplotlib.pyplot as plt
 from PIL import Image
+import random
 
 # Code for making images greyscale and data augmentation
 # Uses online augmentation (pytorch) so augmented images are not saved
@@ -32,13 +33,32 @@ def augment_data(train_data_path):
     # Transform data
     data_original = datasets.ImageFolder(root=train_data_path, transform=transform_original)
     data_augmented = datasets.ImageFolder(root=train_data_path, transform=transform_augment)
+
     # Combine the augmented data with the original to create new training set
     combined_data = ConcatDataset([data_original, data_augmented])
+
+    # Get a random subset of the data (TOO MUCH DATAAAAAA)
+    total_size = len(combined_data)
+    subset_size = 8000
+    indices = random.sample(range(total_size), subset_size)
+    combined_data = Subset(combined_data, indices)
+
     return combined_data
+
+def augment_test_data(test_data_path):
+    test_data = datasets.ImageFolder(root=test_data_path, transform=transform_original)
+
+    # Get a random subset of the data (TOO MUCH DATAAAAAA)
+    total_size = len(test_data)
+    subset_size = 2000
+    indices = random.sample(range(total_size), subset_size)
+    test_data = Subset(test_data, indices)
+
+    return test_data
 
 
 # TEST CODE DEPRICATED
-
+'''
 path = 'task1/seg_train/seg_train'
 
 train_dataset = augment_data(path)
@@ -53,9 +73,8 @@ def imshow(tensor):
 # Visualize one batch of augmented images
 data_iter = iter(train_loader)
 images, labels = next(data_iter)
-class_names = [label for _, label in train_dataset]
 
 # Display augmented grayscale images
 for i in range(len(images)):  # Display each image in the batch
     imshow(images[i])
-    print(f"Class: {class_names[labels[i].item()]}")  # Print the corresponding class name
+'''
