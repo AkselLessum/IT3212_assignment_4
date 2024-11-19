@@ -18,4 +18,4 @@ def main(train_data_path, test_data_path):
     return X_train, X_test, y_train, y_test
 
 
-main('task1/seg_train/seg_train', 'task1/seg_test/seg_test')
+#main('task1/seg_train/seg_train', 'task1/seg_test/seg_test')
