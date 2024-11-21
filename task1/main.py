@@ -19,5 +19,10 @@ def main(train_data_path, test_data_path):
     print("------------------------------------------")
     return X_train, X_test, y_train, y_test
 
+def main_cnn(train_data_path, test_data_path):
+    train_data = augment_data(train_data_path)
+    test_data = augment_test_data(test_data_path)
+
+    return train_data, test_data
 
 #main('task1/seg_train/seg_train', 'task1/seg_test/seg_test')

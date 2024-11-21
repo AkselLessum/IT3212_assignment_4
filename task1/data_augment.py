@@ -39,7 +39,7 @@ def augment_data(train_data_path):
 
     # Get a random subset of the data (TOO MUCH DATAAAAAA)
     total_size = len(combined_data)
-    subset_size = 8000
+    subset_size = 15000
     indices = random.sample(range(total_size), subset_size)
     combined_data = Subset(combined_data, indices)
 
@@ -50,7 +50,7 @@ def augment_test_data(test_data_path):
 
     # Get a random subset of the data (TOO MUCH DATAAAAAA)
     total_size = len(test_data)
-    subset_size = 2000
+    subset_size = 3000
     indices = random.sample(range(total_size), subset_size)
     test_data = Subset(test_data, indices)
 
