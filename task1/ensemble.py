@@ -45,7 +45,7 @@ class ensemble:
     #use embeddings from VGG16?
     # https://www.kaggle.com/code/arshadali12/image-classification-vgg16-fine-tuned
     def boosting(self): #TODO
-        conv_base = VGG16(weights='imagenet', include_top=False, input_shape=(150, 150, 1))
+        conv_base = VGG16(weights='imagenet', include_top=False, input_shape=(100, 100, 1))
         def preprocess_input(x):
             return np.repeat(x, 3, axis=-1)
         datagen = ImageDataGenerator(preprocessing_function=preprocess_input)
@@ -53,7 +53,7 @@ class ensemble:
     
     #I don't fully understand this
     def transer_learning(self):
-        conv_base = VGG16(weights='imagenet', include_top=False, input_shape=(150, 150, 1))
+        conv_base = VGG16(weights='imagenet', include_top=False, input_shape=(100, 100, 1))
         def preprocess_input(x):
             return np.repeat(x, 3, axis=-1)
         datagen = ImageDataGenerator(preprocessing_function=preprocess_input)
@@ -76,7 +76,7 @@ class ensemble:
             return features, labels
         train_features, train_labels = extract_features(self.train_directory, sample_count=2000)
         test_features, test_labels = extract_features(self.test_directory, sample_count=1000)
-        return extract_features
+        return train_features, train_labels, test_features, test_labels
     
     
     #Layer 2
