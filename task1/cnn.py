@@ -5,6 +5,7 @@ from torchvision import datasets, transforms
 from torch.utils.data import DataLoader
 from main import *
 import matplotlib.pyplot as plt
+from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
 
 train_data, test_data = main_cnn('task1/seg_train/seg_train', 'task1/seg_test/seg_test')
 
@@ -91,6 +92,10 @@ def train_and_evaluate(model, criterion, optimizer, train_loader, test_loader, n
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     model = model.to(device)  # Move the model to GPU
 
+    best_accuracy = 0
+    best_model_state = None
+    no_improvement_epochs = 0  # Counter for early stopping
+
     for epoch in range(num_epochs):
         # Training phase
         model.train()
@@ -135,13 +140,30 @@ def train_and_evaluate(model, criterion, optimizer, train_loader, test_loader, n
         test_accuracies.append(accuracy)
         print(f"Test Accuracy: {accuracy:.2f}%")
 
+        # Check for early stopping
+        if accuracy > best_accuracy:
+            best_accuracy = accuracy
+            best_model_state = model.state_dict()  # Save best model
+            no_improvement_epochs = 0  # Reset counter
+        else:
+            no_improvement_epochs += 1
+
+        if no_improvement_epochs >= 3: # Patience of 3
+            print(f"Early stopping triggered after {epoch+1} epochs. Best test accuracy: {best_accuracy:.2f}%")
+            break
+    
+    # Load the best model state for evaluation or further use
+    model.load_state_dict(best_model_state)
+    print(f"Model with best test accuracy ({best_accuracy:.2f}%) loaded.")
+
+    return model
+
 # Train and evaluate the model
 '''train_CNN(model, train_loader, criterion, optimizer, num_epochs=10)
 evaluate_CNN(model, test_loader)'''
 
-train_and_evaluate(model, criterion, optimizer, train_loader, test_loader, 20)
-
-epochs = range(1, len(train_accuracies) + 1)  # Create a range starting from 1
+# Code to plot "overfitting"
+'''epochs = range(1, len(train_accuracies) + 1)  # Create a range starting from 1
 
 plt.plot(epochs, train_accuracies, label="Training accuracy", color="blue")
 plt.plot(epochs, test_accuracies, label="Test accuracy", color="orange")
@@ -149,4 +171,44 @@ plt.xlabel('Epochs')
 plt.ylabel('Accuracy')
 plt.legend()
 plt.title('Accuracy vs Epochs')
-plt.show()
+plt.show()'''
+
+# Code to run and return optimal model after early stopping
+
+model = train_and_evaluate(model, criterion, optimizer, train_loader, test_loader, 20)
+
+# Function to generate confusion matrix
+def get_confusion_matrix(model, test_loader, class_names):
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    model.eval()  # Set model to evaluation mode
+    model = model.to(device)
+
+    all_preds = []
+    all_labels = []
+
+    with torch.no_grad():
+        for inputs, labels in test_loader:
+            inputs, labels = inputs.to(device), labels.to(device)  # Move data to GPU
+            outputs = model(inputs)
+            _, predicted = torch.max(outputs, 1)
+
+            all_preds.extend(predicted.cpu().numpy())  # Collect predictions
+            all_labels.extend(labels.cpu().numpy())   # Collect true labels
+
+    # Compute the confusion matrix
+    cm = confusion_matrix(all_labels, all_preds)
+
+    # Visualize the confusion matrix
+    disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=class_names)
+    plt.figure(figsize=(10, 8))
+    disp.plot(cmap=plt.cm.Blues, values_format='d')
+    plt.title('Confusion Matrix')
+    plt.show()
+
+    return cm
+
+# Class names for the dataset (replace with your class names)
+class_names = ['Building', 'Forests', 'Glacier', 'Mountain', 'Sea', 'Street']
+
+# Call the function
+confusion_matrix_result = get_confusion_matrix(model, test_loader, class_names)
