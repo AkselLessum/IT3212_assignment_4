@@ -11,7 +11,7 @@ from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
 from scipy.stats import mode
 from sklearn.metrics import accuracy_score
 
-
+#TODO: Fix this garbage
 class ensemble_Dumb:
     
     def __init__(self):
@@ -37,6 +37,7 @@ class ensemble_Dumb:
         self.finalpred = np.array([])
         for i in range(len(self.X_test)):
             self.finalpred = np.append(self.finalpred, mode([pred1[i], pred2[i], pred3[i], pred4[i]])[0][0])
+            
         
         accuracy = accuracy_score(self.y_test, self.finalpred)
         print(f'Accuracy: {accuracy * 100:.2f}%')
