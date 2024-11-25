@@ -6,3 +6,6 @@ matplotlib
 scikit-learn
 Pillow
 xgboost
+scikit-image
+tensorflow
+pandas
