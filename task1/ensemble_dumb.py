@@ -1,5 +1,4 @@
-#Simple ensemble, 3 models
-# and boosting
+# Simple ensemble, 3 models and boosting
 
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.neighbors import KNeighborsClassifier
@@ -9,7 +8,8 @@ import numpy as np
 from xgboost import XGBClassifier
 from matplotlib import pyplot as plt
 from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
-from sklearn.ensemble import VotingClassifier
+from scipy.stats import mode
+from sklearn.metrics import accuracy_score
 
 
 class ensemble_Dumb:
@@ -24,32 +24,22 @@ class ensemble_Dumb:
 
     
     def do_ensemble(self):
-
-        model1 = DecisionTreeClassifier(random_state=42)
-        model2 = KNeighborsClassifier()
-        model3 = LogisticRegression(random_state=42)
-        model4 = XGBClassifier(random_state=42, n_estimators=100, max_depth=3, learning_rate=0.1)    
+        self.model1.fit(self.X_train, self.y_train)
+        self.model2.fit(self.X_train, self.y_train)
+        self.model3.fit(self.X_train, self.y_train)
+        self.model4.fit(self.X_train, self.y_train)
         
-        model1.fit(self.X_train, self.y_train)
-        model2.fit(self.X_train, self.y_train)
-        model3.fit(self.X_train, self.y_train)
-        model4.fit(self.X_train, self.y_train)
+        pred1 = self.model1.predict(self.X_test)  
+        pred2 = self.model2.predict(self.X_test)
+        pred3 = self.model3.predict(self.X_test)
+        pred4 = self.model4.predict(self.X_test)
         
-        pred1 = model1.predict(self.X_test)  
-        pred2 = model2.predict(self.X_test)
-        pred3 = model3.predict(self.X_test)
-        pred4 = model4.predict(self.X_test)
+        self.finalpred = np.array([])
+        for i in range(len(self.X_test)):
+            self.finalpred = np.append(self.finalpred, mode([pred1[i], pred2[i], pred3[i], pred4[i]])[0][0])
         
-        finalpred = np.array([])
-        for i in range(0,len(self.X_test)):
-            final_pred = np.append(final_pred, t.mode([pred1[i], pred2[i], pred3[i], pred4[i]]))
-            
-        model1v = LogisticRegression(random_state=42)
-        model2v = DecisionTreeClassifier(random_state=42)
-        
-        model = VotingClassifier(estimators=[('lr', model1v), ('dt', model2v)], voting='hard')
-        model.fit(self.X_train, self.y_train)
-        model.score(self.X_test, self.y_test)
+        accuracy = accuracy_score(self.y_test, self.finalpred)
+        print(f'Accuracy: {accuracy * 100:.2f}%')
         
         return self.finalpred    
         
@@ -70,6 +60,8 @@ class ensemble_Dumb:
         class_names = ['Building', 'Forests', 'Glacier', 'Mountain', 'Sea', 'Street']
         cm = confusion_matrix(self.y_test, self.finalpred)
         disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=class_names)
+        disp.plot()
+        plt.show()
         
         
 ensemble = ensemble_Dumb()
@@ -77,4 +69,3 @@ ensemble = ensemble_Dumb()
 ensemble.do_ensemble()
 
 ensemble.plot()
-        
