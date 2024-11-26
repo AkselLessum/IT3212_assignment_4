@@ -9,3 +9,4 @@ xgboost
 scikit-image
 tensorflow
 pandas
+lightgbm

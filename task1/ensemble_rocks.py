@@ -6,6 +6,8 @@ from sklearn.metrics import accuracy_score, classification_report
 from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
 import numpy as np
 import matplotlib.pyplot as plt
+from xgboost import XGBClassifier
+from lightgbm import LGBMClassifier
 
 # Load data
 X_train, X_test, y_train, y_test = main('task1/seg_train/seg_train', 'task1/seg_test/seg_test')
@@ -13,13 +15,17 @@ X_train, X_test, y_train, y_test = main('task1/seg_train/seg_train', 'task1/seg_
 # Initialize classifiers
 dc_classifier = DecisionTreeClassifier(random_state=42)
 rf_classifier = RandomForestClassifier(n_estimators=100, random_state=42)
-gb_classifier = GradientBoostingClassifier(n_estimators=100, random_state=42)
+#gb_classifier = GradientBoostingClassifier(n_estimators=100, random_state=42)
+xgb_classifier = XGBClassifier(n_estimators=100, use_label_encoder=False, eval_metric='logloss' ,random_state=42)
+lgbm_classifier = LGBMClassifier(n_estimators=100, random_state=42)
 
 # List of classifiers
 classifiers = {
     "Decision Tree": dc_classifier,
     "Random Forest": rf_classifier,
-    "Gradient Boosting": gb_classifier
+    #"Gradient Boosting": gb_classifier
+    "Light GBM": lgbm_classifier,
+    "XGBoost": xgb_classifier
 }
 
 # Train all classifiers and collect their predictions
@@ -142,5 +148,9 @@ Classification Report for Combined Model:
     accuracy                           0.63      3000
    macro avg       0.63      0.64      0.63      3000
 weighted avg       0.63      0.63      0.63      3000
+
+
+run 2:
+
 
 """""
