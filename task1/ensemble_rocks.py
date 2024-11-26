@@ -152,5 +152,109 @@ weighted avg       0.63      0.63      0.63      3000
 
 run 2:
 
+--- Training Decision Tree ---
+Decision Tree training time: 17.0043 seconds
+Decision Tree prediction time: 0.0097 seconds
+Decision Tree Accuracy: 48.33%
+Classification Report:
+              precision    recall  f1-score   support
+
+           0       0.46      0.47      0.47       437
+           1       0.70      0.75      0.72       474
+           2       0.38      0.34      0.36       553
+           3       0.36      0.38      0.37       525
+           4       0.46      0.44      0.45       510
+           5       0.54      0.55      0.55       501
+
+    accuracy                           0.48      3000
+   macro avg       0.48      0.49      0.49      3000
+weighted avg       0.48      0.48      0.48      3000
+
+
+--- Training Random Forest ---
+Random Forest training time: 48.2772 seconds
+Random Forest prediction time: 0.1028 seconds
+Random Forest Accuracy: 59.20%
+Classification Report:
+              precision    recall  f1-score   support
+
+           0       0.77      0.51      0.61       437
+           1       0.77      0.90      0.83       474
+           2       0.48      0.44      0.46       553
+           3       0.40      0.52      0.45       525
+           4       0.57      0.51      0.54       510
+           5       0.69      0.70      0.70       501
+
+    accuracy                           0.59      3000
+   macro avg       0.61      0.60      0.60      3000
+weighted avg       0.60      0.59      0.59      3000
+
+
+--- Training Light GBM ---
+[LightGBM] [Info] Auto-choosing col-wise multi-threading, the overhead of testing was 0.063859 seconds.
+You can set `force_col_wise=true` to remove the overhead.
+[LightGBM] [Info] Total Bins 153000
+[LightGBM] [Info] Number of data points in the train set: 15000, number of used features: 600
+[LightGBM] [Info] Start training from score -1.867345
+[LightGBM] [Info] Start training from score -1.807889
+[LightGBM] [Info] Start training from score -1.781809
+[LightGBM] [Info] Start training from score -1.715169
+[LightGBM] [Info] Start training from score -1.843053
+[LightGBM] [Info] Start training from score -1.743732
+Light GBM training time: 20.6478 seconds
+Light GBM prediction time: 0.0247 seconds
+Light GBM Accuracy: 66.43%
+Classification Report:
+              precision    recall  f1-score   support
+
+           0       0.77      0.69      0.73       437
+           1       0.84      0.93      0.88       474
+           2       0.54      0.52      0.53       553
+           3       0.47      0.51      0.49       525
+           4       0.63      0.61      0.62       510
+           5       0.78      0.77      0.77       501
+
+    accuracy                           0.66      3000
+   macro avg       0.67      0.67      0.67      3000
+weighted avg       0.67      0.66      0.66      3000
+
+
+--- Training XGBoost ---
+C:\Users\morom\Documents\git repos\datadrevet\IT3212_assignment_4\.venv\Lib\site-packages\xgboost\core.py:158: UserWarning: [11:25:37] WARNING: C:\buildkite-agent\builds\buildkite-windows-cpu-autoscaling-group-i-0ed59c031377d09b8-1\xgboost\xgboost-ci-windows\src\learner.cc:740:
+Parameters: { "use_label_encoder" } are not used.
+
+  warnings.warn(smsg, UserWarning)
+XGBoost training time: 59.2583 seconds
+XGBoost prediction time: 0.0147 seconds
+XGBoost Accuracy: 66.40%
+Classification Report:
+              precision    recall  f1-score   support
+
+           0       0.74      0.68      0.71       437
+           1       0.82      0.94      0.88       474
+           2       0.55      0.53      0.54       553
+           3       0.49      0.54      0.52       525
+           4       0.65      0.62      0.63       510
+           5       0.77      0.72      0.74       501
+
+    accuracy                           0.66      3000
+   macro avg       0.67      0.67      0.67      3000
+weighted avg       0.66      0.66      0.66      3000
+
+
+Combined Model Accuracy: 66.03%
+Classification Report for Combined Model:
+              precision    recall  f1-score   support
+
+           0       0.75      0.72      0.74       437
+           1       0.80      0.94      0.87       474
+           2       0.53      0.57      0.55       553
+           3       0.48      0.52      0.50       525
+           4       0.66      0.55      0.60       510
+           5       0.81      0.70      0.75       501
+
+    accuracy                           0.66      3000
+   macro avg       0.67      0.67      0.67      3000
+weighted avg       0.66      0.66      0.66      3000
 
 """""
